@@ -1,5 +1,5 @@
 'use strict';
-
+import { StorageAreaMyContent, isStorageAreaExistMyContent } from './core/types'
 
 /*
 // отсортировать по урлу
@@ -14,7 +14,7 @@ let html_show_stat = document.getElementById('showstat') as HTMLButtonElement
 
 html_show_stat.addEventListener('click', () => {
   chrome.storage.local.get(function (data) {
-      const newWindow = window.open('about:blank')
+      const newWindow = window.open('about:blank#histoty-time-visites')
 
       if (!newWindow) return
 

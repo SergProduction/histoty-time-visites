@@ -1,26 +1,12 @@
-const fetchPOST = (obj: any) => fetch(
-  'http://localhost:3000',
-  {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(obj)
-})
-
-const fetchGET = () => fetch('http://localhost:3000')
+import { isStorageAreaExistMyContent, ItemHistoryVisit } from './core/types'
+import { fetchGET } from './core/lib'
 
 
-fetchGET().then(r => r.json()).then(console.log)
+
+fetchGET().then(console.log)
 
 
-// примерно 250 байт стоит такой объект с 4 полями
-type ItemHistoryVisit = {
-  title: string,
-  url: string,
-  start: number,
-  end: null | number
-}
+
 
 type ParamsItemHistoty = { title: string, url: string }
 
@@ -71,8 +57,11 @@ const initStore = () => {
   })
 }
 
+
 const save = ()  => {
-  chrome.storage.local.get((items) => {
+  chrome.storage.local.get(items => {
+    if (!isStorageAreaExistMyContent(items)) return
+
     console.log('chrome.storage.local.get', items)
 
     chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
