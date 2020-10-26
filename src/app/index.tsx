@@ -1,38 +1,49 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { useStore } from 'effector-react'
-import { $historyVisit } from './store'
+import { $historyVisit, $totalTimeByHost } from './store'
+import { timeFormater } from './lib'
+import { fackTreeScheked } from './connect'
 
 
 
+
+fackTreeScheked()
 
 
 
 
 
 const Main = () => {
-  const maybeHistoryVisit = useStore($historyVisit)
+  const maybeTotalTimeByHost = useStore($totalTimeByHost)
   
-  if (!maybeHistoryVisit) return null
-  
+  console.log({maybeTotalTimeByHost})
+
+  if (!maybeTotalTimeByHost) return null
+
+  // TODO: реализовать сортировку списка с инпута по имени хоста
+
   return (
-    <p>ES</p>
+    <table>
+      <thead>
+        <tr>
+          <td>host</td>
+          <td>time h:m:s</td>
+        </tr>
+      </thead>
+      <tbody>
+      {maybeTotalTimeByHost.map(h => (
+        <tr key={h.host}>
+          <td>{h.host}</td>
+          <td>{timeFormater(h.totalTime)}</td>
+        </tr>
+      ))}
+      </tbody>
+    </table>
   )
 }
 
 const rootHTML = document.getElementById('root') as HTMLElement
 
 ReactDOM.render(<Main />, rootHTML)
-
-
-// TODO: сделать избранное, чтоб добавлять домены, и следить за ними
-
-/*
-// отсортировать по урлу
-t.filter(h => h.url.includes('nestjs'))
-// получить время посещения одного айтема
-t1 = t.map(h => h.end - h.start)
-// получить общие время всех айтемов
-t2 = t1.reduce((a, b) => a+b))
-*/
 

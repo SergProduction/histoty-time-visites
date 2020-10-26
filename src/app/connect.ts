@@ -15,3 +15,5 @@ chrome.runtime.onMessage.addListener((request: RequestMessage, sender, sendRespo
     sendResponse({type: "ok"})
   }
 })
+
+export const fackTreeScheked = () => 0
