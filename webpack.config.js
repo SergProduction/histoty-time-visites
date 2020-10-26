@@ -8,11 +8,11 @@ module.exports = {
   context: __dirname,
   entry: {
     background: path.join(__dirname, './src/background/index.ts'),
-    app: path.join(__dirname, './src/app/index.ts'),
+    app: path.join(__dirname, './src/app/index.tsx'),
   },
   target: 'web',
   resolve: {
-    extensions: ['.ts', '.tsx'],
+    extensions: ['.js', '.ts', '.tsx'],
     modules: ['node_modules'],
   },
   output: {
@@ -20,23 +20,33 @@ module.exports = {
     filename: '[name].js',
     // publicPath: "/",
   },
+  devtool: 'source-map',
   optimization: {
-    minimize: false,
+    minimize: true,
   },
   module: {
     rules: [
       {
-        test: /\.(js|ts|tsx)$/,
+        test: /\.(ts|tsx)$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       },
+      {
+        test: /\.(jsx|tsx)$/,
+        exclude: /node_modules/,
+        use: {
+          loader: "babel-loader",
+        }
+      }
     ]
   },
   plugins: [
     new HtmlWebpackPlugin({
       minify: false,
       title: 'Histoty time visites',
-      excludeChunks: ['background']
+      excludeChunks: ['background'],
+      inject: 'body',
+      template: path.join(__dirname, './src/app/index.ejs'),
     })
   ]
 }
