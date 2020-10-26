@@ -1,5 +1,5 @@
 const path = require('path')
-// const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const TerserPlugin = require('terser-webpack-plugin')
 
 
@@ -7,8 +7,8 @@ const path = require('path')
 module.exports = {
   context: __dirname,
   entry: {
-    background: path.join(__dirname, './src/background.ts'),
-    popup: path.join(__dirname, './src/popup.ts'),
+    background: path.join(__dirname, './src/background/index.ts'),
+    app: path.join(__dirname, './src/app/index.ts'),
   },
   target: 'web',
   resolve: {
@@ -18,7 +18,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, './dist'),
     filename: '[name].js',
-    publicPath: "/",
+    // publicPath: "/",
   },
   optimization: {
     minimize: false,
@@ -31,5 +31,12 @@ module.exports = {
         exclude: /node_modules/,
       },
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      minify: false,
+      title: 'Histoty time visites',
+      excludeChunks: ['background']
+    })
+  ]
 }

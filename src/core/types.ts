@@ -5,9 +5,3 @@ export type ItemHistoryVisit = {
   start: number,
   end: null | number
 }
-
-export type StorageAreaMyContent = { historyVisit: ItemHistoryVisit[] } & {[k: string]: any}
-
-export const isStorageAreaExistMyContent = (s: {[k: string]: any}): s is StorageAreaMyContent => {
-  return Array.isArray(s.historyVisit)
-}

@@ -1,12 +1,31 @@
-import { isStorageAreaExistMyContent, ItemHistoryVisit } from './core/types'
-import { fetchGET } from './core/lib'
+import { ItemHistoryVisit } from '../core/types'
+import { fetchGET } from '../core/lib'
+import { addHistoryVisit, getHistoryVisit, getBytesInUse, createTabAwaitComplite } from './helpers'
 
 
+// fetchGET().then(console.log)
 
-fetchGET().then(console.log)
+let windowIdUserLastUse: undefined | number = undefined
 
+chrome.browserAction.onClicked.addListener(async function (tab) {
+  const pathToAppHtml = chrome.runtime.getURL("dist/index.html")
 
+  const createdTab = await createTabAwaitComplite({
+    active: true,
+    url: pathToAppHtml,
+    windowId: windowIdUserLastUse
+  })
 
+  const historyVisit = await getHistoryVisit()
+
+  // но такого не может быть
+  if (!createdTab.id) return
+
+  chrome.tabs.sendMessage(
+    createdTab.id,
+    { type: "historyVisit", payload: historyVisit }
+  )
+})
 
 type ParamsItemHistoty = { title: string, url: string }
 
@@ -36,8 +55,9 @@ class Store {
   }
 
   closeLastSession() {
-    // TODO: end undefined
-    this.state[this.state.length-1].end = Date.now()
+    if (this.state.length > 0) {
+      this.state[this.state.length - 1].end = Date.now()
+    }
   }
 
   clear() {
@@ -48,33 +68,24 @@ class Store {
 const tempStoreHistoryVisit = new Store()
 
 const initStore = () => {
-  chrome.storage.local.get((items) => {
-    if (items.historyVisit === undefined) {
+  getHistoryVisit()
+    .catch(() => {
       chrome.storage.local.clear(() => {
         chrome.storage.local.set({ historyVisit: [] })
       })
-    }
-  })
+    })
 }
 
 
-const save = ()  => {
-  chrome.storage.local.get(items => {
-    if (!isStorageAreaExistMyContent(items)) return
-
-    console.log('chrome.storage.local.get', items)
-
-    chrome.storage.local.getBytesInUse(null, (bytesInUse) => {
-      // 5,242,880 max limit local storage
+const save = () => {
+  addHistoryVisit(tempStoreHistoryVisit.state)
+    .then(() => tempStoreHistoryVisit.clear())
+    .then(getBytesInUse)
+    .then(bytesInUse => {
       if (bytesInUse >= 500000) {
-        console.log('fifty limit, should be send data fetch and save to server')
+        console.warn(`bytesInUse ${bytesInUse}`)
       }
     })
-
-    chrome.storage.local.set({ historyVisit: [...items.historyVisit, ...tempStoreHistoryVisit.state ] }, ()  => {
-      tempStoreHistoryVisit.clear()
-    })
-  })
 }
 
 const listenStoreAndSave = () => {
@@ -102,17 +113,19 @@ chrome.runtime.onStartup.addListener(() => {
 // TODO: Не учитывать короткое время жизни ItemHistoryVisit, это может быть обычное переключение вкладок
 chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, tab => {
-    // console.log('a', {tab})
+    windowIdUserLastUse = tab.windowId
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
+    
     tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
   })
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // console.log('b', {changeInfo, tab})
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
+
   tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
 })
+
 
 chrome.windows.onRemoved.addListener(windowId => {
   // close window
