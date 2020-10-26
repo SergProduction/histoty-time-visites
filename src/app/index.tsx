@@ -1,36 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { restore, createStore, createEvent } from 'effector'
-import { ItemHistoryVisit } from '../core/types'
-
-type RequestMessage = {
-  type: 'historyVisit'
-  payload: ItemHistoryVisit[]
-}
-
-chrome.runtime.onMessage.addListener((request: RequestMessage, sender, sendResponse) => {
-  if (request.type == "historyVisit" && sender.tab === undefined) {
-    setHistoryVisit(request.payload)
-    sendResponse({type: "ok"})
-  }
-})
-
-const setHistoryVisit = createEvent<ItemHistoryVisit[]>()
-
-const $historyVisit = createStore<null | ItemHistoryVisit[]>(null)
-  .on(setHistoryVisit, (s, p) => p)
+import { useStore } from 'effector-react'
+import { $historyVisit } from './store'
 
 
 
-const rootHTML = document.getElementById('root') as HTMLElement
+
+
+
+
 
 const Main = () => {
+  const maybeHistoryVisit = useStore($historyVisit)
+  
+  if (!maybeHistoryVisit) return null
+  
   return (
     <p>ES</p>
   )
 }
 
+const rootHTML = document.getElementById('root') as HTMLElement
+
 ReactDOM.render(<Main />, rootHTML)
+
+
+// TODO: сделать избранное, чтоб добавлять домены, и следить за ними
 
 /*
 // отсортировать по урлу

@@ -21,7 +21,7 @@ module.exports = {
     // publicPath: "/",
   },
   optimization: {
-    minimize: false,
+    minimize: true,
   },
   module: {
     rules: [
