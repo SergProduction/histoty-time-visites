@@ -13,6 +13,13 @@
     "scripts": ["./dist/background.js"],
     "persistent": false
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "run_at": "document_idle",
+      "js": ["./dist/contentscript.js"]
+    }
+  ],
   "browser_action": {
     "default_title": "collect stat visit urls and spend time each url"
   },
