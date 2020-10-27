@@ -1,4 +1,5 @@
 const path = require('path')
+const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 // const TerserPlugin = require('terser-webpack-plugin')
 
@@ -8,6 +9,7 @@ module.exports = {
   context: __dirname,
   entry: {
     background: path.join(__dirname, './src/background/index.ts'),
+    contentscript: path.join(__dirname, './src/contentscript.ts'),
     app: path.join(__dirname, './src/app/index.tsx'),
   },
   target: 'web',
@@ -44,9 +46,13 @@ module.exports = {
     new HtmlWebpackPlugin({
       minify: false,
       title: 'Histoty time visites',
-      excludeChunks: ['background'],
+      excludeChunks: ['background', 'contentscript'],
       inject: 'body',
       template: path.join(__dirname, './src/app/index.ejs'),
+    }),
+    new webpack.SourceMapDevToolPlugin({
+      append: '\n//# sourceURL=[url]',
+      filename: '[name][ext].map'
     })
   ]
 }

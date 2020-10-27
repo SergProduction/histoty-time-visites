@@ -32,9 +32,11 @@ type ParamsItemHistoty = { title: string, url: string }
 class Store {
   state: ItemHistoryVisit[]
   prev: null | ItemHistoryVisit
+  isPause: boolean
   constructor() {
     this.prev = null
     this.state = []
+    this.isPause = false
   }
 
   setPrev({ title, url }: ParamsItemHistoty) {
@@ -47,6 +49,8 @@ class Store {
   }
 
   push(p: ParamsItemHistoty) {
+    if (this.isPause) return
+
     if (this.prev !== null) {
       const prevComplite = { ...this.prev, end: Date.now() }
       this.state.push(prevComplite)
@@ -63,9 +67,31 @@ class Store {
   clear() {
     this.state = []
   }
+
+  pause() {
+    this.isPause = true
+  }
+
+  continue() {
+    this.isPause = false
+  }
 }
 
+
 const tempStoreHistoryVisit = new Store()
+
+
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.type === 'history_visit_isActive') {
+    if (msg.payload) {
+      tempStoreHistoryVisit.continue()
+    } else {
+      tempStoreHistoryVisit.pause()
+    }
+    sendResponse('ok')
+  }
+})
+
 
 const initStore = () => {
   getHistoryVisit()
@@ -108,20 +134,22 @@ chrome.runtime.onStartup.addListener(() => {
 })
 
 
-// TODO: Учитывать активность трекая мышку, потерю фокуса окна, возвращению фокуса
-// TODO: При выходе надо завершать ItemHistoryVisit, иначе она завершится только при открытии новой вкадки
 // TODO: Не учитывать короткое время жизни ItemHistoryVisit, это может быть обычное переключение вкладок
 chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, tab => {
     windowIdUserLastUse = tab.windowId
+    // console.log('A', tab)
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
+    // console.log('endA', tab)
     
     tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
   })
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  // console.log('U', tab)
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
+  // console.log('endU', tab)
 
   tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
 })
