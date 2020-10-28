@@ -23,7 +23,7 @@ class UserActive {
     this.timer = window.setTimeout(() => {
       this.isActive = false
       this.listener(this.isActive)
-    }, 5 * 1000)
+    }, 7 * 60 * 1000)
   }
 }
 
