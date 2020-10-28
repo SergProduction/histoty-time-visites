@@ -1,5 +1,5 @@
 import { ItemHistoryVisit } from '../core/types'
-import { setHistoryVisit } from './store'
+import { setHistory } from './store'
 
 
 type RequestMessage = {
@@ -10,7 +10,7 @@ type RequestMessage = {
 chrome.runtime.onMessage.addListener((request: RequestMessage, sender, sendResponse) => {
   if (request.type == "historyVisit" && sender.tab === undefined) {
     
-    setHistoryVisit(request.payload)
+    setHistory(request.payload)
     
     sendResponse({type: "ok"})
   }
