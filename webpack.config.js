@@ -1,7 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 // const TerserPlugin = require('terser-webpack-plugin')
 
@@ -56,17 +55,6 @@ module.exports = {
           name: 'fonts/[name].[ext]',
         },
       },
-      /* {
-        test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, 'css-loader'],
-      },
-       */
-      /*
-      {
-        test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
-      },
-      */
     ]
   },
   plugins: [
@@ -84,6 +72,5 @@ module.exports = {
       append: '\n//# sourceURL=[url]',
       filename: '[name][ext].map'
     }),
-    // new MiniCssExtractPlugin(),
   ]
 }
