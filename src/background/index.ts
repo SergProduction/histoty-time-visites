@@ -1,5 +1,6 @@
+import "regenerator-runtime"
 import { ItemHistoryVisit } from '../core/types'
-import { fetchGET } from '../core/lib'
+import { fetchGET, CancableTimeout } from '../core/lib'
 import { addHistoryVisit, getHistoryVisit, getBytesInUse, createTabAwaitComplite } from './helpers'
 
 
@@ -17,13 +18,14 @@ chrome.browserAction.onClicked.addListener(async function (tab) {
   })
 
   const historyVisit = await getHistoryVisit()
+  const bytesInUse = await getBytesInUse()
 
-  // но такого не может быть
+  // но такого не может быть, для тс нужна проверка
   if (!createdTab.id) return
 
   chrome.tabs.sendMessage(
     createdTab.id,
-    { type: "historyVisit", payload: historyVisit }
+    { type: "historyVisit", payload: {historyVisit, bytesInUse} }
   )
 })
 
@@ -55,6 +57,7 @@ class Store {
       const prevComplite = { ...this.prev, end: Date.now() }
       this.state.push(prevComplite)
     }
+
     this.setPrev(p)
   }
 
@@ -79,6 +82,13 @@ class Store {
 
 
 const tempStoreHistoryVisit = new Store()
+const awaitTimeoutTabUpdate = new CancableTimeout<ParamsItemHistoty>(3 * 1000)
+
+awaitTimeoutTabUpdate.onChange((pending, h) => {
+  if (pending === true || !h) return
+  console.log('push', h)
+  tempStoreHistoryVisit.push(h)
+})
 
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
@@ -134,15 +144,13 @@ chrome.runtime.onStartup.addListener(() => {
 })
 
 
-// TODO: Не учитывать короткое время жизни ItemHistoryVisit, это может быть обычное переключение вкладок
 chrome.tabs.onActivated.addListener(activeInfo => {
   chrome.tabs.get(activeInfo.tabId, tab => {
     windowIdUserLastUse = tab.windowId
     // console.log('A', tab)
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
     // console.log('endA', tab)
-    
-    tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
+    awaitTimeoutTabUpdate.update({ title: tab.title, url: tab.url })
   })
 })
 
@@ -150,8 +158,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // console.log('U', tab)
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
   // console.log('endU', tab)
-
-  tempStoreHistoryVisit.push({ title: tab.title, url: tab.url })
+  awaitTimeoutTabUpdate.update({ title: tab.title, url: tab.url })
 })
 
 

@@ -1,88 +1,35 @@
-import React, { useState } from 'react'
+import "regenerator-runtime"
+import "normalize.css/normalize.css"
+import "@blueprintjs/icons/lib/css/blueprint-icons.css"
+import "@blueprintjs/core/lib/css/blueprint.css"
+
+import React from 'react'
 import ReactDOM from 'react-dom'
-import { useStore } from 'effector-react'
-import {
-  $history,
-  $historyHost,
-  toggleSortByHost,
-  toggleSortByTime
-} from './store'
-import { timeFormater } from './lib'
 import { fackTreeScheked } from './connect'
+import { NavigationTop } from './navigation'
+import { Classes, Card } from '@blueprintjs/core'
 
 
 
 
 fackTreeScheked()
 
-
-function History() {
-  const maybeHistory = useStore($history)
-  if (!maybeHistory) return null
-
-  return (
-    <React.Fragment>
-      {maybeHistory.map((h, i) => (
-        <tr key={i + h.url}>
-          <td>{h.url}</td>
-          <td>{timeFormater((h.end || 0) - h.start)}</td>
-        </tr>
-      ))}
-    </React.Fragment>
-  )
-}
-
-function HistoryHost() {
-  const maybeHistoryHost = useStore($historyHost)
-  if (!maybeHistoryHost) return null
-
-  return (
-    <React.Fragment>
-      {maybeHistoryHost.map((h, i) => (
-        <tr key={i + h.host}>
-          <td>{h.host}</td>
-          <td>{timeFormater(h.totalTime)}</td>
-        </tr>
-      ))}
-    </React.Fragment>
-  )
-}
+// TODO: реализовать сортировку списка с инпута по имени хоста
 
 
 function Main() {
-  const [type, setType] = useState(true)
-
-  // TODO: реализовать сортировку списка с инпута по имени хоста
-  // TODO: bug, если сперва нажать url -> sortByTime -> sortByHost -> host
-
   return (
     <div>
-      <div>
-        <button onClick={() => setType(t => !t)}>
-          {type ? 'url' : 'host'}
-        </button>
-        <button onClick={() => toggleSortByHost()}>sortByHost</button>
-        <button onClick={() => toggleSortByTime()}>sortByTime</button>
-      </div>
-      <table>
-        <thead>
-          <tr>
-            <td>{type ? 'host' : 'url'}</td>
-            <td>time h:m:s</td>
-          </tr>
-        </thead>
-        <tbody>
-          {type
-            ? <HistoryHost />
-            : <History />
-          }
-        </tbody>
-      </table>
+      <NavigationTop />
     </div>
   )
 }
 
 const rootHTML = document.getElementById('root') as HTMLElement
+
+// rootHTML.setAttribute('class', 'bp3-dark') // "bp3-body"
+
+// document.body.style.backgroundColor
 
 ReactDOM.render(<Main />, rootHTML)
 
