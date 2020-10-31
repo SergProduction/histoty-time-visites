@@ -23,7 +23,8 @@ module.exports = {
     filename: '[name].js',
     publicPath: "./",
   },
-  devtool: 'source-map',
+  // devtool: 'source-map',
+  devtool: 'inline-source-map',
   optimization: {
     minimize: true,
   },
@@ -68,9 +69,10 @@ module.exports = {
       inject: 'body',
       template: path.join(__dirname, './src/app/index.ejs'),
     }),
-    new webpack.SourceMapDevToolPlugin({
+    /* new webpack.SourceMapDevToolPlugin({
       append: '\n//# sourceURL=[url]',
       filename: '[name][ext].map'
     }),
+     */
   ]
 }

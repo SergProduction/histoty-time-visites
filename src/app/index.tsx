@@ -13,7 +13,8 @@ import {
   $history,
   $historyHost,
   toggleSortByHost,
-  toggleSortByTime
+  toggleSortByTime,
+  $bytesInUsed
 } from './store'
 import { timeFormater } from './lib'
 import { fackTreeScheked } from './connect'
@@ -58,6 +59,8 @@ function HistoryHost() {
 function Main() {
   const [type, setType] = useState(true)
 
+  const bytesInUsed = useStore($bytesInUsed)
+
   // TODO: реализовать сортировку списка с инпута по имени хоста
   // TODO: bug, если сперва нажать url -> sortByTime -> sortByHost -> host
 
@@ -69,8 +72,10 @@ function Main() {
         </Button>
         <Button onClick={() => toggleSortByHost()}>sortByHost</Button>
         <Button onClick={() => toggleSortByTime()}>sortByTime</Button>
+        <Button onClick={() => {}}>save to server</Button>
+        <div>{bytesInUsed} from 5000000</div>
       </div>
-      <table>
+      <table className="bp3-html-table bp3-html-table-condensed bp3-small">
         <thead>
           <tr>
             <td>{type ? 'host' : 'url'}</td>

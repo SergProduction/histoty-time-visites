@@ -12,3 +12,24 @@ export const timeFormater = (milisecons: number) => {
   }
   return `${hour}:${min}:${sec}`
 }
+
+
+export const groupBy = <T extends { [k: string]: any }>(arr: T[], prop: string): { [k: string]: T[] } => arr
+  .reduce<{ [k: string]: T[] }>((acc, it) => {
+    const by = it[prop]
+    if (acc[by] === undefined) {
+      return { ...acc, [by]: [it] }
+    } else {
+      acc[by].push(it)
+    }
+    return acc
+  }, {})
+
+export const sortByProp = (prop: string) => <T extends { [k: string]: any }>(arr: T[], dir?: boolean): T[] => {
+  if (dir === false) {
+    return [...arr].sort((a, b) => a[prop] > b[prop] ? 1 : -1)
+  }
+  return [...arr].sort((a, b) => a[prop] < b[prop] ? 1 : -1)
+}
+
+export const sum = (arr: number[]) => arr.reduce((a, b) => a + b)

@@ -18,13 +18,14 @@ chrome.browserAction.onClicked.addListener(async function (tab) {
   })
 
   const historyVisit = await getHistoryVisit()
+  const bytesInUse = await getBytesInUse()
 
   // но такого не может быть
   if (!createdTab.id) return
 
   chrome.tabs.sendMessage(
     createdTab.id,
-    { type: "historyVisit", payload: historyVisit }
+    { type: "historyVisit", payload: {historyVisit, bytesInUse} }
   )
 })
 
