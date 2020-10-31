@@ -1,4 +1,11 @@
 import "regenerator-runtime"
+import "normalize.css/normalize.css"
+import "@blueprintjs/icons/lib/css/blueprint-icons.css"
+import "@blueprintjs/core/lib/css/blueprint.css"
+
+import { Button } from "@blueprintjs/core"
+
+
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useStore } from 'effector-react'
@@ -57,11 +64,11 @@ function Main() {
   return (
     <div>
       <div>
-        <button onClick={() => setType(t => !t)}>
+        <Button onClick={() => setType(t => !t)}>
           {type ? 'url' : 'host'}
-        </button>
-        <button onClick={() => toggleSortByHost()}>sortByHost</button>
-        <button onClick={() => toggleSortByTime()}>sortByTime</button>
+        </Button>
+        <Button onClick={() => toggleSortByHost()}>sortByHost</Button>
+        <Button onClick={() => toggleSortByTime()}>sortByTime</Button>
       </div>
       <table>
         <thead>

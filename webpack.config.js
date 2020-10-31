@@ -1,6 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
 // const TerserPlugin = require('terser-webpack-plugin')
 
 
@@ -20,7 +22,7 @@ module.exports = {
   output: {
     path: path.join(__dirname, './dist'),
     filename: '[name].js',
-    // publicPath: "/",
+    publicPath: "./",
   },
   devtool: 'source-map',
   optimization: {
@@ -39,10 +41,38 @@ module.exports = {
         test: /\.(ts|tsx)$/,
         use: 'ts-loader',
         exclude: /node_modules/,
-      }
+      },
+      {
+        test: /\.(css)$/i,
+        loader: 'file-loader',
+        options: {
+          name: 'css/[name].[ext]',
+        },
+      },
+      {
+        test: /\.(eot|ttf|woff)$/i,
+        loader: 'file-loader',
+        options: {
+          name: 'fonts/[name].[ext]',
+        },
+      },
+      /* {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
+      },
+       */
+      /*
+      {
+        test: /\.css$/i,
+        use: ['style-loader', 'css-loader'],
+      },
+      */
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env": "{}", // костыль для @blueprintjs
+    }),
     new HtmlWebpackPlugin({
       minify: false,
       title: 'Histoty time visites',
@@ -53,6 +83,7 @@ module.exports = {
     new webpack.SourceMapDevToolPlugin({
       append: '\n//# sourceURL=[url]',
       filename: '[name][ext].map'
-    })
+    }),
+    // new MiniCssExtractPlugin(),
   ]
 }
