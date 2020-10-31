@@ -1,3 +1,4 @@
+import "regenerator-runtime"
 import { ItemHistoryVisit } from '../core/types'
 import { fetchGET } from '../core/lib'
 import { addHistoryVisit, getHistoryVisit, getBytesInUse, createTabAwaitComplite } from './helpers'

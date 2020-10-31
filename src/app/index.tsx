@@ -1,3 +1,4 @@
+import "regenerator-runtime"
 import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { useStore } from 'effector-react'
@@ -9,8 +10,6 @@ import {
 } from './store'
 import { timeFormater } from './lib'
 import { fackTreeScheked } from './connect'
-
-
 
 
 fackTreeScheked()
