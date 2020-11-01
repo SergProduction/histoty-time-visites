@@ -9,7 +9,7 @@ export class CancableTimeout<T> {
   timeout: number
   listener: CancableListener<T>
   lastPayloadUpdate?: T
-  constructor(timeout: number, initPending: boolean = false) {
+  constructor(timeout: number, initPending: boolean = true) {
     this.pending = initPending
     this.timer = undefined
     this.timeout = timeout

@@ -15,11 +15,10 @@ import {
 
 import {
   $bytesInUsed
-} from './store'
+} from './store/storage-size'
 
 import { HistoryHost } from './view/host'
-import { HistoryUrl } from './view/url'
-import { fackTreeScheked } from './connect'
+import { HistoryTimeVisite } from './view/history'
 
 // TODO: добавить избранное
 // TODO: добавить переименование в избранном
@@ -27,14 +26,14 @@ import { fackTreeScheked } from './connect'
 
 const config = [
   {
+    title: 'History',
+    path: 'history',
+    component: HistoryTimeVisite,
+  },
+  {
     title: 'Host',
     path: 'host',
     component: HistoryHost,
-  },
-  {
-    title: 'Url',
-    path: 'url',
-    component: HistoryUrl,
   },
   {
     title: 'Stat',
@@ -55,10 +54,10 @@ const Body = ({ tabId }: { tabId: string }) => {
 const MAXSIZE_CHROMESTORAGE = 5242880
 
 export const NavigationTop = () => {
-  const [tabId, setTabId] = useState<string>('host')
+  const [tabId, setTabId] = useState<string>('history')
   const bytesInUsed = useStore($bytesInUsed)
 
-  console.log(bytesInUsed, bytesInUsed / MAXSIZE_CHROMESTORAGE)
+  // console.log(bytesInUsed, bytesInUsed / MAXSIZE_CHROMESTORAGE)
 
   return (
     <div>

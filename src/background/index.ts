@@ -86,7 +86,7 @@ const awaitTimeoutTabUpdate = new CancableTimeout<ParamsItemHistoty>(3 * 1000)
 
 awaitTimeoutTabUpdate.onChange((pending, h) => {
   if (pending === true || !h) return
-  console.log('push', h)
+  // console.log('push', h)
   tempStoreHistoryVisit.push(h)
 })
 
