@@ -21,7 +21,7 @@ import {
   $pending,
   historyPagination,
   filterByVisitRangeDate,
-  filterByVisitCancel
+  cancelAllFilters
 } from '../store/main'
 
 
@@ -85,7 +85,7 @@ export function HistoryTimeVisite() {
               parseDate={str => new Date(str)}
               value={[startDate, endDate]}
             />
-            <Button onClick={() => filterByVisitCancel()}>reset filters</Button>
+            <Button onClick={() => cancelAllFilters()}>reset filters</Button>
           </td>
         </tr>
         <tr>
