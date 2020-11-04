@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 
 import classnames from 'classnames'
@@ -9,7 +9,7 @@ import {
   Button,
   ButtonGroup,
 } from '@blueprintjs/core'
-
+import { DateRangeInput, DateRange } from "@blueprintjs/datetime"
 
 import { timeFormater } from '../lib'
 import {
@@ -18,7 +18,10 @@ import {
   toggleSortByStartTime,
   toggleSortByUrl,
   toggleSortByTotalTime,
-  $pending
+  $pending,
+  historyPagination,
+  filterByVisitRangeDate,
+  filterByVisitCancel
 } from '../store/main'
 
 
@@ -29,15 +32,32 @@ const Table = styled.table`
 `
 
 export function HistoryTimeVisite() {
-  const maybeHistory = useStore($history)
   const pending = useStore($pending)
-  
+
+  const { chunk: history, page, maxPage } = useStore(historyPagination.$state)
+
+  const [startDate, setStartDate] = useState(new Date())
+  const [endDate, setEndDate] = useState(new Date())
+
+  const handleRangeChange = (d: DateRange) => {
+    const [from, to] = d
+    if (from !== null && to !== null) {
+      filterByVisitRangeDate({
+        startDate: from.valueOf(),
+        endDate: to.valueOf()
+      })
+    }
+    if (from !== null) setStartDate(from)
+    if (to !== null) setEndDate(to)
+  }
+
+
   useEffect(() => {
     if (pending === true) return
     sortByStartTime(true)
   }, [pending])
 
-  if (!maybeHistory) return null
+  if (pending === true) return null
 
   return (
     <Table className={classnames(Classes.HTML_TABLE, Classes.SMALL)}>
@@ -48,11 +68,25 @@ export function HistoryTimeVisite() {
               <Button onClick={() => toggleSortByStartTime()}>sort by visite</Button>
               <Button onClick={() => toggleSortByUrl()}>sort by url</Button>
               <Button onClick={() => toggleSortByTotalTime()}>sort by total time</Button>
+              <Button onClick={() => historyPagination.prevPage()}>prev</Button>
+              <Button disabled>{page}</Button>
+              <Button disabled>{maxPage}</Button>
+              <Button onClick={() => historyPagination.nextPage()}>next</Button>
             </ButtonGroup>
           </td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <DateRangeInput
+              singleMonthOnly
+              closeOnSelection
+              formatDate={date => date.toLocaleString()}
+              onChange={handleRangeChange}
+              parseDate={str => new Date(str)}
+              value={[startDate, endDate]}
+            />
+            <Button onClick={() => filterByVisitCancel()}>reset filters</Button>
+          </td>
         </tr>
         <tr>
           <td>visite</td>
@@ -63,7 +97,7 @@ export function HistoryTimeVisite() {
       </thead>
       <tbody>
         <React.Fragment>
-          {maybeHistory.map((h, i) => (
+          {history.map((h, i) => (
             <tr key={i + h.url}>
               <td>{DT('%0h:%0m:%0s %0D/%0M/%Y', h.start)}</td>
               <td>{timeFormater((h.end || 0) - h.start)}</td>
