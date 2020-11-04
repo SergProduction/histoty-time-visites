@@ -22,8 +22,8 @@ const _sortByTotalTimeHandler = sortByProp('totalTime')
 
 export const [toggleSortByTotalTime, _sortByTotalTime] = createToggleEvent()
 
-export const $historyHost = $history.map(s => !s ? s : historyMapGroupByHost(s))
-  .on(_sortByTotalTime, (s, p) => !s ? s : _sortByTotalTimeHandler(s, p))
+export const $historyHost = $history.map(s => historyMapGroupByHost(s))
+  .on(_sortByTotalTime, (s, p) => _sortByTotalTimeHandler(s, p))
 
 
 

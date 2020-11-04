@@ -31,8 +31,10 @@
   },
   "dependencies": {
     "@blueprintjs/core": "^3.35.0",
+    "@blueprintjs/datetime": "^3.19.3",
     "classnames": "^2.2.6",
     "date-template": "^2.0.10",
+    "dygraphs": "^2.1.0",
     "effector": "^21.6.0",
     "effector-react": "^21.0.7",
     "react": "^17.0.1",
