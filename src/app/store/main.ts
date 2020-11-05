@@ -78,5 +78,5 @@ guard({
   target: setPending.prepend(() => false)
 })
 
-export const historyPagination = createPagination($historyFiltred, 100)
+export const $historyPagination = createPagination($historyFiltred, 100)
 

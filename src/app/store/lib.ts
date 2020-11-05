@@ -26,7 +26,7 @@ export const createPagination = <T>(stor: Store<T[]>, maxCountInOnePage: number)
   const nextPage = createEvent()
   const prevPage = createEvent()
 
-  const $state = stor.map<P>(x => ({
+  const $state = stor.map(x => ({
     page: 1,
     maxPage: Math.ceil(x.length / maxCountInOnePage),
     data: x,

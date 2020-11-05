@@ -19,7 +19,7 @@ import {
   toggleSortByUrl,
   toggleSortByTotalTime,
   $pending,
-  historyPagination,
+  $historyPagination,
   filterByVisitRangeDate,
   cancelAllFilters
 } from '../store/main'
@@ -34,7 +34,7 @@ const Table = styled.table`
 export function HistoryTimeVisite() {
   const pending = useStore($pending)
 
-  const { chunk: history, page, maxPage } = useStore(historyPagination.$state)
+  const { chunk: history, page, maxPage } = useStore($historyPagination.$state)
 
   const [startDate, setStartDate] = useState(new Date())
   const [endDate, setEndDate] = useState(new Date())
@@ -68,10 +68,10 @@ export function HistoryTimeVisite() {
               <Button onClick={() => toggleSortByStartTime()}>sort by visite</Button>
               <Button onClick={() => toggleSortByUrl()}>sort by url</Button>
               <Button onClick={() => toggleSortByTotalTime()}>sort by total time</Button>
-              <Button onClick={() => historyPagination.prevPage()}>prev</Button>
+              <Button onClick={() => $historyPagination.prevPage()}>prev</Button>
               <Button disabled>{page}</Button>
               <Button disabled>{maxPage}</Button>
-              <Button onClick={() => historyPagination.nextPage()}>next</Button>
+              <Button onClick={() => $historyPagination.nextPage()}>next</Button>
             </ButtonGroup>
           </td>
           <td></td>
@@ -102,7 +102,7 @@ export function HistoryTimeVisite() {
               <td>{DT('%0h:%0m:%0s %0D/%0M/%Y', h.start)}</td>
               <td>{timeFormater((h.end || 0) - h.start)}</td>
               <td>{h.title}</td>
-              <td>{h.url}</td>
+              <td><a target="_blank" href={h.url}>{h.url}</a></td>
             </tr>
           ))}
         </React.Fragment>
