@@ -9,6 +9,8 @@ import ReactDOM from 'react-dom'
 import { fackTreeScheked } from './connect'
 import { NavigationTop } from './navigation'
 import { Classes, Card } from '@blueprintjs/core'
+import 'c3/c3.min.css'
+
 
 
 
