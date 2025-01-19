@@ -8,7 +8,7 @@ import { addHistoryVisit, getHistoryVisit, getBytesInUse, createTabAwaitComplite
 
 let windowIdUserLastUse: undefined | number = undefined
 
-chrome.browserAction.onClicked.addListener(async function (tab) {
+chrome.action.onClicked.addListener(async function (tab) {
   const pathToAppHtml = chrome.runtime.getURL("dist/index.html")
 
   const createdTab = await createTabAwaitComplite({
@@ -29,7 +29,7 @@ chrome.browserAction.onClicked.addListener(async function (tab) {
   )
 })
 
-type ParamsItemHistoty = { title: string, url: string }
+type ParamsItemHistory = { title: string, url: string }
 
 class Store {
   state: ItemHistoryVisit[]
@@ -41,7 +41,7 @@ class Store {
     this.isPause = false
   }
 
-  setPrev({ title, url }: ParamsItemHistoty) {
+  setPrev({ title, url }: ParamsItemHistory) {
     this.prev = {
       title,
       url,
@@ -50,7 +50,7 @@ class Store {
     }
   }
 
-  push(p: ParamsItemHistoty) {
+  push(p: ParamsItemHistory) {
     if (this.isPause) return
 
     if (this.prev !== null) {
@@ -82,7 +82,7 @@ class Store {
 
 
 const tempStoreHistoryVisit = new Store()
-const awaitTimeoutTabUpdate = new CancableTimeout<ParamsItemHistoty>(3 * 1000, false)
+const awaitTimeoutTabUpdate = new CancableTimeout<ParamsItemHistory>(3 * 1000, false)
 
 awaitTimeoutTabUpdate.onChange((pending, h) => {
   if (pending === true || !h) return

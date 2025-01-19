@@ -5,7 +5,7 @@ type CancableListener<T> = (pending: boolean, payload?: T) => void
 
 export class CancableTimeout<T> {
   pending: boolean
-  timer?: number
+  timer?: number | NodeJS.Timeout
   timeout: number
   listener: CancableListener<T>
   lastPayloadUpdate?: T
@@ -26,9 +26,9 @@ export class CancableTimeout<T> {
 
     this.__updatePending(true)
 
-    window.clearTimeout(this.timer)
+    clearTimeout(this.timer)
 
-    this.timer = window.setTimeout(() => {
+    this.timer = setTimeout(() => {
       this.__updatePending(false)
     }, this.timeout)
   }

@@ -1,12 +1,12 @@
 {
-  "name": "histoty-time-visites",
+  "name": "history-time-visit",
   "version": "0.0.1",
-  "description": "histoty time visites chrome extension",
+  "description": "history time visit chrome extension",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "webpack --watch",
-    "build": "webpack --mode=production"
+    "build": "webpack --mode=development"
   },
   "author": "Sergey Filippov",
   "license": "ISC",
@@ -14,7 +14,7 @@
     "@babel/core": "^7.12.3",
     "@babel/preset-env": "^7.12.1",
     "@babel/preset-react": "^7.12.1",
-    "@types/chrome": "0.0.124",
+    "@types/chrome": "^0.0.297",
     "@types/classnames": "^2.2.11",
     "@types/react": "^16.9.53",
     "@types/react-dom": "^16.9.8",

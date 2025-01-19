@@ -7,8 +7,8 @@ const isStorageAreaExistMyContent = (s: {[k: string]: any}): s is StorageAreaMyC
 }
 
 export const getHistoryVisit = () => new Promise<ItemHistoryVisit[]>((res, rej) => {
-  chrome.storage.local.get(items => {
-    (<any>window).stor = items
+  chrome.storage.local.get((items: StorageAreaMyContent) => {
+    // (<any>window).stor = items
     if (isStorageAreaExistMyContent(items)) {
       res(items.historyVisit)
     } else {

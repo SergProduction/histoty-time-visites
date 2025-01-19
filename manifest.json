@@ -1,8 +1,8 @@
 {
-  "name": "Histoty time visites",
+  "name": "History time visit",
   "version": "0.1",
-  "description": "Histoty time visites chrome extension",
-  "manifest_version": 2,
+  "description": "History time visit chrome extension",
+  "manifest_version": 3,
   "permissions": [
     "storage",
     "activeTab",
@@ -10,8 +10,7 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["./dist/background.js"],
-    "persistent": false
+    "service_worker": "./dist/background.js"
   },
   "content_scripts": [
     {
@@ -20,7 +19,7 @@
       "js": ["./dist/contentscript.js"]
     }
   ],
-  "browser_action": {
+  "action": {
     "default_title": "collect stat visit urls and spend time each url"
   },
   "icons": {

@@ -26,7 +26,7 @@ module.exports = {
   // devtool: 'source-map',
   devtool: 'inline-source-map',
   optimization: {
-    minimize: true,
+    // minimize: true,
   },
   module: {
     rules: [
