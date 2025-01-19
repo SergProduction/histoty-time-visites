@@ -9,7 +9,7 @@ import { addHistoryVisit, getHistoryVisit, getBytesInUse, createTabAwaitComplite
 let windowIdUserLastUse: undefined | number = undefined
 
 chrome.action.onClicked.addListener(async function (tab) {
-  const pathToAppHtml = chrome.runtime.getURL("dist/index.html")
+  const pathToAppHtml = chrome.runtime.getURL("/index.html")
 
   const createdTab = await createTabAwaitComplite({
     active: true,
