@@ -1,9 +1,12 @@
-import { createStore, createEvent, guard, restore, combine } from 'effector'
+import { createStore, createEvent, guard, restore, combine, sample } from 'effector'
 
 import { ItemHistoryVisit } from '../../core/types'
 import { ItemHistory } from '../types'
 import { sortByProp } from '../lib'
-import { createToggleEvent } from './lib'
+import {
+  createToggleEvent,
+  createPagination,
+} from './lib'
 
 
 
@@ -47,16 +50,33 @@ export const [toggleSortByStartTime, sortByStartTime] = createToggleEvent()
 const setPending = createEvent<boolean>()
 export const $pending = restore<boolean>(setPending, true)
 
-export const $history = createStore<null | ItemHistory[]>(null)
-  .on(_setHistoryFull, (s, p) => p)
-  .on(_sortByUrl, (s, p) => !s ? s : _sortByUrlHandler(s, p))
-  .on(_sortByTotalTime, (s, p) => !s ? s : _sortByTotalTimeHandler(s, p))
-  .on(sortByStartTime, (s, p) => !s ? s : _sortByStartTimeHandler(s, p))
+const filterByUrl = createEvent<string>()
+export const filterByVisitRangeDate = createEvent<{startDate: number, endDate: number}>()
+export const cancelAllFilters = createEvent()
 
+
+export const $history = createStore<ItemHistory[]>([])
+  .on(_setHistoryFull, (s, p) => p)
+
+const $historyFiltred = $history.map(x=>x)
+  .on(_sortByUrl, (s, p) => _sortByUrlHandler(s, p))
+  .on(_sortByTotalTime, (s, p) => _sortByTotalTimeHandler(s, p))
+  .on(sortByStartTime, (s, p) => _sortByStartTimeHandler(s, p))
+  .on(filterByVisitRangeDate, (s, p)  => s.filter(h => h.end !== null && h.start > p.startDate && h.end < p.endDate))
+  .on(filterByUrl, (s, p)  => s.filter(h => h.url.includes(p)))
+
+sample({
+  source: $history,
+  clock: cancelAllFilters,
+  target: $historyFiltred
+})
 
 // checkout pending only to false
 guard({
   source: $history.updates,
-  filter: combine([$history, $pending]).map(([h, p]) => h !== null && p === true),
+  filter: combine([$history, $pending]).map(([h, p]) => h.length > 0 && p === true),
   target: setPending.prepend(() => false)
 })
+
+export const $historyPagination = createPagination($historyFiltred, 100)
+

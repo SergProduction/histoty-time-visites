@@ -19,6 +19,9 @@ import {
 
 import { HistoryHost } from './view/host'
 import { HistoryTimeVisite } from './view/history'
+// import { Chart } from './view/chart'
+import { Chart } from './view/c3'
+
 
 // TODO: добавить избранное
 // TODO: добавить переименование в избранном
@@ -34,6 +37,11 @@ const config = [
     title: 'Host',
     path: 'host',
     component: HistoryHost,
+  },
+  {
+    title: 'Chart',
+    path: 'chart',
+    component: Chart,
   },
   {
     title: 'Stat',
