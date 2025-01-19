@@ -17,7 +17,7 @@ export const getHistoryVisit = () => new Promise<ItemHistoryVisit[]>((res, rej) 
   })
 })
 
-export const addHistoryVisit = (historyVisit: ItemHistoryVisit[]) => new Promise((res) => {
+export const addHistoryVisit = (historyVisit: ItemHistoryVisit[]) => new Promise<void>((res) => {
   return getHistoryVisit()
     .then((oldHistoryVisit) => {
       chrome.storage.local.set(
