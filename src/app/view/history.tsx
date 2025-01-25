@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core'
 import { DateRangeInput, DateRange } from "@blueprintjs/datetime"
 
-import { timeFormater } from '../lib'
+import { timeFormater } from '../../share-lib/pure'
 import {
   $history,
   sortByStartTime,
@@ -89,7 +89,7 @@ export function HistoryTimeVisite() {
           </td>
         </tr>
         <tr>
-          <td>visite</td>
+          <td>visit</td>
           <td>total time</td>
           <td>title</td>
           <td>url</td>

@@ -2,29 +2,27 @@ import "regenerator-runtime"
 import "normalize.css/normalize.css"
 import "@blueprintjs/icons/lib/css/blueprint-icons.css"
 import "@blueprintjs/core/lib/css/blueprint.css"
-import "@blueprintjs/datetime/lib/css/blueprint-datetime.css"
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import ReactDOM from 'react-dom'
-import { fackTreeScheked } from './connect'
-import { NavigationTop } from './navigation'
-import { Classes, Card } from '@blueprintjs/core'
-import 'c3/c3.min.css'
+import "./connect"
+import { Body } from "./body"
 
-
-
-
-
-fackTreeScheked()
-
-// TODO: реализовать сортировку списка с инпута по имени хоста
+import { getHistoryVisit } from "../share-lib/chrome"
+import { setHistoryVisits } from "./store/main"
 
 
 function Main() {
+  useEffect(() => {
+    chrome.runtime.sendMessage({type: 'history_visit_tempSave' }, () => {
+      getHistoryVisit().then(x => {
+        setHistoryVisits(x)
+      })
+    })
+  }, [])
+
   return (
-    <div>
-      <NavigationTop />
-    </div>
+    <Body />
   )
 }
 

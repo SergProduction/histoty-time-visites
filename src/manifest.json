@@ -1,7 +1,7 @@
 {
-  "name": "History time visit",
-  "version": "0.1",
-  "description": "History time visit chrome extension",
+  "name": "History time visits",
+  "version": "0.3",
+  "description": "History time visits chrome extension",
   "manifest_version": 3,
   "permissions": [
     "storage",
@@ -20,7 +20,8 @@
     }
   ],
   "action": {
-    "default_title": "collect stat visit urls and spend time each url"
+    "default_title": "History time visits",
+    "default_popup": "./popup.html"
   },
   "icons": {
     "16": "images/icon16.png",

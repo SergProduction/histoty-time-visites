@@ -1,30 +1,17 @@
-import { ItemHistoryVisit } from '../core/types'
-import { setBytesInUsed } from './store/storage-size'
+import { ItemHistoryVisit } from '../share-lib/types'
 import { setHistory } from './store/main'
 
 
-
-
-
-type RequestMessage = {
-  type: 'historyVisit'
-  payload: {
-    historyVisit: ItemHistoryVisit[],
-    bytesInUse: number,
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (!changes['historyVisit']) {
+    console.warn('chrome.storage.onChanged does not "historyVisit"')
+    console.info(changes, namespace);
+    return
   }
-}
 
-chrome.runtime.onMessage.addListener((request: RequestMessage, sender, sendResponse) => {
-  if (request.type == "historyVisit" && sender.tab === undefined) {
-    // console.log(request.payload)
-    setHistory(request.payload.historyVisit)
-    setBytesInUsed(request.payload.bytesInUse)
-    sendResponse({type: "ok"})
-  }
-})
+  const storageChange = changes['historyVisit']
 
-export const save = () => {
+  const historyVisit = storageChange.newValue as ItemHistoryVisit[]
 
-}
-
-export const fackTreeScheked = () => 0
+  setHistory(historyVisit)
+});

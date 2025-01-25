@@ -1,5 +1,3 @@
-import { ItemHistoryVisit } from './types'
-
 
 type CancableListener<T> = (pending: boolean, payload?: T) => void
 
@@ -21,6 +19,7 @@ export class CancableTimeout<T> {
     this.listener = listener
   }
 
+  // пока вызывают апдейт чаще чем timeout, то onChagnge не сработает
   update(payload?: T) {
     this.lastPayloadUpdate = payload
 
@@ -41,6 +40,8 @@ export class CancableTimeout<T> {
   }
 }
 
+
+/* 
 export const fetchPOST = (obj: any) => fetch(
   'http://localhost:3000',
   {
@@ -52,3 +53,4 @@ export const fetchPOST = (obj: any) => fetch(
 })
 
 export const fetchGET = (): Promise<ItemHistoryVisit> => fetch('http://localhost:3000').then(r => r.json())
+*/

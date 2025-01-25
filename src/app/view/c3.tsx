@@ -3,7 +3,7 @@ import { useStore } from 'effector-react'
 import c3 from 'c3'
 import DT from 'date-template'
 
-import { groupBy, timeFormater } from '../lib'
+import { groupBy, timeFormater } from '../../share-lib/pure'
 
 import {
   $pending,

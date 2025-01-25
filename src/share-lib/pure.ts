@@ -25,6 +25,7 @@ export const groupBy = <T extends { [k: string]: any }>(arr: T[], prop: string):
     return acc
   }, {})
 
+
 export const sortByProp = (prop: string) => <T extends { [k: string]: any }>(arr: T[], dir?: boolean): T[] => {
   if (dir === false) {
     return [...arr].sort((a, b) => a[prop] > b[prop] ? 1 : -1)
@@ -32,4 +33,13 @@ export const sortByProp = (prop: string) => <T extends { [k: string]: any }>(arr
   return [...arr].sort((a, b) => a[prop] < b[prop] ? 1 : -1)
 }
 
+
 export const sum = (arr: number[]) => arr.reduce((a, b) => a + b)
+
+
+export const getHostByUrl = (url: string): string => {
+  const host = new URL(url).host
+  return host.includes('www')
+    ? host.slice(4)
+    : host
+}

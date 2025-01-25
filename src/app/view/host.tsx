@@ -9,7 +9,7 @@ import {
 } from '@blueprintjs/core'
 import classnames from 'classnames'
 
-import { timeFormater } from '../lib'
+import { timeFormater } from '../../share-lib/pure'
 
 import { $historyHost, toggleSortByTotalTime } from '../store/host'
 import { toggleSortByUrl } from '../store/main'

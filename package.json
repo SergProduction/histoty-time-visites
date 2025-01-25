@@ -1,7 +1,7 @@
 {
   "name": "history-time-visit",
-  "version": "0.0.1",
-  "description": "history time visit chrome extension",
+  "version": "0.0.3",
+  "description": "history time visits chrome extension",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
