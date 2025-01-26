@@ -1,15 +1,12 @@
 import { createStore, createEvent, guard, restore, combine, sample } from 'effector'
 
-import { ItemHistoryVisit } from '../../core/types'
-import { ItemHistory } from '../types'
-import { sortByProp } from '../lib'
+import { ItemHistoryVisit } from '../../share-lib/types'
+import { ItemHistoryFull } from '../../share-lib/types'
+import { getHostByUrl, sortByProp } from '../../share-lib/pure'
 import {
   createToggleEvent,
   createPagination,
-} from './lib'
-
-
-
+} from './effector-lib'
 
 
 // TODO: сделать избранное, чтоб добавлять домены, и следить за ними
@@ -17,14 +14,6 @@ import {
 // TODO: когда будет свой готовый сервис, можно предоставлять апи для платных подписчиков
 // TODO: сделать выборку в промежутке дат
 // TODO: сделать пагинацию
-
-
-const getHostByUrl = (url: string): string => {
-  const host = new URL(url).host
-  return host.includes('www')
-    ? host.slice(4)
-    : host
-}
 
 
 export const _sortByUrlHandler = sortByProp('url')
@@ -36,7 +25,7 @@ export const setHistory = createEvent<ItemHistoryVisit[]>()
 
 export const _setHistoryFull = setHistory
 .map(x => _sortByStartTimeHandler(x))
-.map<ItemHistory[]>(historyVisit => historyVisit.map(h => ({
+.map<ItemHistoryFull[]>(historyVisit => historyVisit.map(h => ({
   ...h,
   host: getHostByUrl(h.url),
   totalTime: (h.end || 0) - h.start
@@ -55,7 +44,7 @@ export const filterByVisitRangeDate = createEvent<{startDate: number, endDate: n
 export const cancelAllFilters = createEvent()
 
 
-export const $history = createStore<ItemHistory[]>([])
+export const $history = createStore<ItemHistoryFull[]>([])
   .on(_setHistoryFull, (s, p) => p)
 
 const $historyFiltred = $history.map(x=>x)

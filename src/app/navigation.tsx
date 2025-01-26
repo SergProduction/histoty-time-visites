@@ -7,20 +7,14 @@ import {
   NavbarDivider,
   Tabs,
   Tab,
-  ProgressBar,
-  Intent,
-  Classes,
-  Button,
 } from '@blueprintjs/core'
 
-import {
-  $bytesInUsed
-} from './store/storage-size'
 
 import { HistoryHost } from './view/host'
 import { HistoryTimeVisite } from './view/history'
-// import { Chart } from './view/chart'
 import { Chart } from './view/c3'
+import { UserStore } from './view/userStor'
+import styled from 'styled-components'
 
 
 // TODO: добавить избранное
@@ -59,16 +53,12 @@ const Body = ({ tabId }: { tabId: string }) => {
 }
 
 
-const MAXSIZE_CHROMESTORAGE = 5242880
 
 export const NavigationTop = () => {
   const [tabId, setTabId] = useState<string>('history')
-  const bytesInUsed = useStore($bytesInUsed)
-
-  // console.log(bytesInUsed, bytesInUsed / MAXSIZE_CHROMESTORAGE)
 
   return (
-    <div>
+    <DivStyle>
       <Navbar fixedToTop>
         <NavbarGroup>
           <NavbarHeading>History</NavbarHeading>
@@ -80,23 +70,24 @@ export const NavigationTop = () => {
             onChange={(t) => setTabId(t as string)}
           >
             {config.map(r => (
-              <Tab id={r.path} title={r.title} />
+              <Tab id={r.path} title={r.title} key={r.path} />
             ))}
           </Tabs>
         </NavbarGroup>
         <NavbarGroup align="right">
-          <div style={{ width: '100px' }}>
-            <ProgressBar
-              animate={false}
-              intent={Intent.PRIMARY}
-              value={bytesInUsed / MAXSIZE_CHROMESTORAGE}
-            />
-          </div>
+          <UserStore />
         </NavbarGroup>
       </Navbar>
-      <div style={{ paddingTop: '50px' }}>
+      <div className='body'>
         <Body tabId={tabId} />
       </div>
-    </div>
+    </DivStyle>
   )
 }
+
+const DivStyle = styled.div`
+  .body {
+    padding: 10px;
+    padding-top: 50px
+  }
+`

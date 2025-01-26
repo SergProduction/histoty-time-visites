@@ -1,5 +1,5 @@
-import { ItemHistoryVisit } from '../share-lib/types'
-import { setHistory } from './store/main'
+import { ItemHistoryVisit } from "../share-lib/types";
+import { setHistoryVisits } from "./store/main"
 
 
 chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -13,5 +13,7 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
   const historyVisit = storageChange.newValue as ItemHistoryVisit[]
 
-  setHistory(historyVisit)
+  console.log({ historyVisit });
+
+  setHistoryVisits(historyVisit)
 });

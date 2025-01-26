@@ -11,7 +11,7 @@ import {
 } from '@blueprintjs/core'
 import { DateRangeInput, DateRange } from "@blueprintjs/datetime"
 
-import { timeFormater } from '../lib'
+import { timeFormater } from '../../share-lib/pure'
 import {
   $history,
   sortByStartTime,
@@ -24,12 +24,6 @@ import {
   cancelAllFilters
 } from '../store/main'
 
-
-const Table = styled.table`
-  & td:nth-child(1) {
-    min-width: 155px;
-  }
-`
 
 export function HistoryTimeVisite() {
   const pending = useStore($pending)
@@ -60,53 +54,71 @@ export function HistoryTimeVisite() {
   if (pending === true) return null
 
   return (
-    <Table className={classnames(Classes.HTML_TABLE, Classes.SMALL)}>
-      <thead>
-        <tr>
-          <td>
-            <ButtonGroup>
-              <Button onClick={() => toggleSortByStartTime()}>sort by visite</Button>
-              <Button onClick={() => toggleSortByUrl()}>sort by url</Button>
-              <Button onClick={() => toggleSortByTotalTime()}>sort by total time</Button>
-              <Button onClick={() => $historyPagination.prevPage()}>prev</Button>
-              <Button disabled>{page}</Button>
-              <Button disabled>{maxPage}</Button>
-              <Button onClick={() => $historyPagination.nextPage()}>next</Button>
-            </ButtonGroup>
-          </td>
-          <td></td>
-          <td></td>
-          <td>
-            <DateRangeInput
-              singleMonthOnly
-              closeOnSelection
-              formatDate={date => date.toLocaleString()}
-              onChange={handleRangeChange}
-              parseDate={str => new Date(str)}
-              value={[startDate, endDate]}
-            />
-            <Button onClick={() => cancelAllFilters()}>reset filters</Button>
-          </td>
-        </tr>
-        <tr>
-          <td>visite</td>
-          <td>total time</td>
-          <td>title</td>
-          <td>url</td>
-        </tr>
-      </thead>
-      <tbody>
-        <React.Fragment>
-          {history.map((h, i) => (
-            <tr key={i + h.url}>
-              <td>{DT('%0h:%0m:%0s %0D/%0M/%Y', h.start)}</td>
-              <td>{timeFormater((h.end || 0) - h.start)}</td>
-              <td>{h.title}</td>
-              <td><a target="_blank" href={h.url}>{h.url}</a></td>
-            </tr>
-          ))}
-        </React.Fragment>
-      </tbody>
-    </Table>
+    <DivStyle>
+      <div className='paginationWrap'>
+        <ButtonGroup>
+          <Button onClick={() => $historyPagination.prevPage()}>prev</Button>
+          <Button disabled>{page}</Button>
+          <Button disabled>{maxPage}</Button>
+          <Button onClick={() => $historyPagination.nextPage()}>next</Button>
+          <Button onClick={() => cancelAllFilters()}>reset filters</Button>
+
+          {/* 
+        <DateRangeInput
+          singleMonthOnly
+          closeOnSelection
+          formatDate={date => date.toLocaleString()}
+          onChange={handleRangeChange}
+          parseDate={str => new Date(str)}
+          value={[startDate, endDate]}
+        />
+        */}
+        </ButtonGroup>
+      </div>
+      <table className={classnames(Classes.HTML_TABLE, Classes.COMPACT)}>
+        <thead>
+          <tr>
+            <td></td>
+            <td>
+              <Button onClick={() => toggleSortByStartTime()}>visit</Button>
+            </td>
+            <td>
+              <Button onClick={() => toggleSortByTotalTime()}>total time</Button>
+            </td>
+            <td>title</td>
+            <td>
+              <Button onClick={() => toggleSortByUrl()}>url</Button>
+            </td>
+          </tr>
+        </thead>
+        <tbody>
+          <React.Fragment>
+            {history.map((h, i) => (
+              <tr key={i + h.url}>
+                <td>
+                  {h.icon && <img src={h.icon} alt="icon" className='icon' />}
+                </td>
+                <td>{DT('%0D/%0M/%Y %0h:%0m:%0s', h.start)}</td>
+                <td>{timeFormater((h.end || 0) - h.start)}</td>
+                <td>{h.title}</td>
+                <td><a target="_blank" href={h.url}>{h.url}</a></td>
+              </tr>
+            ))}
+          </React.Fragment>
+        </tbody>
+      </table>
+    </DivStyle>
   )
 }
+
+const DivStyle = styled.div`
+  white-space: nowrap;
+
+  .paginationWrap {
+    padding: 10px;
+  }
+
+  .icon {
+    width: 16px;
+  }
+`

@@ -1,4 +1,4 @@
-import { ItemHistoryVisit } from '../core/types'
+import { ItemHistoryVisit } from './types'
 
 type StorageAreaMyContent = { historyVisit: ItemHistoryVisit[] } & {[k: string]: any}
 
@@ -34,7 +34,7 @@ export const getBytesInUse = () => new Promise<number>((res) => {
   })
 })
 
-
+/* 
 export const createTabAwaitComplite = (tabParams: chrome.tabs.CreateProperties): Promise<chrome.tabs.Tab> => new Promise((res, rej) => {
   let tabIdcreated: undefined | number = undefined
 
@@ -51,3 +51,4 @@ export const createTabAwaitComplite = (tabParams: chrome.tabs.CreateProperties):
     chrome.tabs.onUpdated.addListener(handlerTabListener)
   })
 })
+ */
