@@ -3,6 +3,7 @@
 export type ItemHistoryVisit = {
   title: string,
   url: string,
+  icon?: string,
   start: number,
   end: null | number
 }
@@ -10,6 +11,7 @@ export type ItemHistoryVisit = {
 
 export type ItemHistoryByHost = {
   host: string
+  icon?: string,
   totalTime: number
 }
 

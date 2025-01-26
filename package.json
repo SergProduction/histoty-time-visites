@@ -31,7 +31,7 @@
     "webpack-cli": "^4.1.0"
   },
   "dependencies": {
-    "@blueprintjs/core": "^3.35.0",
+    "@blueprintjs/core": "^5.16.4",
     "@blueprintjs/datetime": "^3.19.3",
     "@types/c3": "^0.7.5",
     "c3": "^0.7.20",

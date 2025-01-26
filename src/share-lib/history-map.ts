@@ -8,6 +8,11 @@ export const historyMapGroupByHost = (his: ItemHistoryFull[]): ItemHistoryByHost
   return Object.keys(hisMapHost).map(host => {
     const hisHost = hisMapHost[host]
     const totalTime = sum(hisHost.map(h => h.totalTime))
-    return { host, totalTime: totalTime }
+    const firstHost = hisHost[0]
+    return {
+      host,
+      icon: firstHost.icon,
+      totalTime: totalTime,
+    }
   })
 }

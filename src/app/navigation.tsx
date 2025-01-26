@@ -14,6 +14,7 @@ import { HistoryHost } from './view/host'
 import { HistoryTimeVisite } from './view/history'
 import { Chart } from './view/c3'
 import { UserStore } from './view/userStor'
+import styled from 'styled-components'
 
 
 // TODO: добавить избранное
@@ -57,7 +58,7 @@ export const NavigationTop = () => {
   const [tabId, setTabId] = useState<string>('history')
 
   return (
-    <div>
+    <DivStyle>
       <Navbar fixedToTop>
         <NavbarGroup>
           <NavbarHeading>History</NavbarHeading>
@@ -69,7 +70,7 @@ export const NavigationTop = () => {
             onChange={(t) => setTabId(t as string)}
           >
             {config.map(r => (
-              <Tab id={r.path} title={r.title} />
+              <Tab id={r.path} title={r.title} key={r.path} />
             ))}
           </Tabs>
         </NavbarGroup>
@@ -77,9 +78,16 @@ export const NavigationTop = () => {
           <UserStore />
         </NavbarGroup>
       </Navbar>
-      <div style={{ paddingTop: '50px' }}>
+      <div className='body'>
         <Body tabId={tabId} />
       </div>
-    </div>
+    </DivStyle>
   )
 }
+
+const DivStyle = styled.div`
+  .body {
+    padding: 10px;
+    padding-top: 50px
+  }
+`

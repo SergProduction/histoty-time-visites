@@ -9,9 +9,9 @@ import {
   Button,
   ButtonGroup,
 } from '@blueprintjs/core'
-import { $historyHost } from './store/main'
-import { getHostByUrl, timeFormater } from '../share-lib/pure'
-import { ItemHistoryByHost } from '../share-lib/types'
+import { $historyHost } from '../store/main'
+import { getHostByUrl, timeFormater } from '../../share-lib/pure'
+import { ItemHistoryByHost } from '../../share-lib/types'
 
 
 
@@ -44,11 +44,12 @@ export function Body() {
     <BodyStyle>
       {currentHost && (
         <div>
-          <p>
-            текущий домен {currentHost.host}
-          </p>
-          <p>
-            общее время домена: {timeFormater(currentHost.totalTime)}
+          <div className='domen'>
+            {currentHost.icon && <img src={currentHost.icon} alt="" className='icon' />}
+            <p className='no-margin'>{currentHost.host}</p>
+          </div>
+          <p className='time'>
+            {timeFormater(currentHost.totalTime)}
           </p>
         </div>
       )}
@@ -64,8 +65,24 @@ export function Body() {
 const BodyStyle = styled.div`
   padding: 12px;
   max-width: 500px;
+  text-align: right;
 
-  .last-visit {
-    
+  .domen {
+    display: flex;
+    align-items: center;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+  }
+
+  .no-margin {
+    margin: 0;
+  }
+
+  .time {
+    font-weight: 600;
   }
 `

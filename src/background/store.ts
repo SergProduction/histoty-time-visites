@@ -1,6 +1,7 @@
 import { ItemHistoryVisit } from "../share-lib/types"
+import { urlParseRegExp } from "../share-lib/url-parse"
 
-export type ItemHistory = { title: string, url: string }
+export type ItemHistory = { title: string, url: string, icon?: string }
 
 // Временное хранилище, чтоб не тригерить по пустякам стор хрома
 export class TempStore {
@@ -14,6 +15,7 @@ export class TempStore {
 
   push(itemHist: ItemHistoryVisit) {
     this.state.push(itemHist)
+    // console.log('TempStore.push', this.state);
   }
 
   // получить и сбросить стор
@@ -44,23 +46,54 @@ export class LastItemHistoryState {
   }
 
   push(payload: ItemHistory) {
-    // если новый урл, то завершаем старую сессию и начинаем новую
-    if (this.state?.url !== payload.url) {
-      this.closeLastSession()
+    // console.log('LastItemHistoryState.push', this.state, payload);
+
+    if (payload.url.startsWith('chrome')) return
+
+    if (!this.state) {
       this.state = {
-        url: payload.url,
-        title: payload.title,
+        ...payload,
         start: Date.now(),
         end: null
       }
     }
-    // если урл тот же, обновляем время завершения
-    else if (this.state?.url === payload.url) {
+
+    const { host: hostState } = urlParseRegExp(this.state.url)
+    const { host: hostPayload } = urlParseRegExp(payload.url)
+
+    // если новый домен, то завершаем старую сессию и начинаем новую
+    if (hostState !== hostPayload) {
+      this.closeLastSession()
+      this.state = {
+        ...payload,
+        start: Date.now(),
+        end: null
+      }
+    }
+    // если домен тот же, обновляем время завершения
+    // и обновляем новый урл, старый затираем новым
+    if (hostState === hostPayload) {
       this.state = {
         ...this.state,
+        ...payload,
         end: Date.now(),
       }
     }
+  }
+
+  // возвращает активную сессию и обновляет время
+  // но не удаляет как обычный pop у массивов
+  pop() {
+    if (this.state === null) return null
+    const currentSession = {
+      ...this.state,
+      end: Date.now(),
+    }
+    this.state = {
+      ...this.state,
+      start: Date.now(),
+    }
+    return currentSession
   }
 
   // завершает сессию, и вызывает всех слушателей,
@@ -87,4 +120,3 @@ export class LastItemHistoryState {
     }
   }
 }
-

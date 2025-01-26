@@ -26,17 +26,17 @@ export function UserStore() {
 
   return (
     <DivStyle>
+
+      <ButtonGroup>
+        <Button onClick={clearUserStore}>
+          Очистить
+        </Button>
+        <Button onClick={clearUserStore} disabled>
+          Cжать
+        </Button>
+      </ButtonGroup>
+
       <div className='progress'>
-
-        <ButtonGroup>
-          <Button onClick={clearUserStore}>
-            Очистить
-          </Button>
-          <Button onClick={clearUserStore} disabled>
-            Cжать
-          </Button>
-        </ButtonGroup>
-
         <p className='size'>
           {(bytesInUsed / 1024).toFixed(2)} / {(MAXSIZE_CHROMESTORAGE / 1024).toFixed(2)} kb
         </p>

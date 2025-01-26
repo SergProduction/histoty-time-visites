@@ -1,12 +1,23 @@
 import { CancableTimeout } from './share-lib/cancable-timeout'
 
+// content-script
+// внедряется на каждую страницу, и остается там даже если она не активная вкладка
 
-const userActive = new CancableTimeout(7 * 60 * 1000)
+// 5 минут бездействия
+const userActive = new CancableTimeout(4 * 60 * 1000)
 
 
 userActive.onChange((isActive) => {
   // console.log('userActive', isActive);
-  var msg = {type: 'history_visit_isActive', payload: isActive}
+  const msg = {
+    type: 'history_visit_isActive',
+    payload: isActive
+  }
+
+  if (!chrome || !chrome.runtime || !chrome.runtime.sendMessage) {
+    console.warn('chrome.runtime.sendMessage undefined', window.location.href);
+    return
+  }
   chrome.runtime.sendMessage(msg)
 })
 

@@ -3,8 +3,8 @@ import { LastItemHistoryState, TempStore } from "./store"
 
 
 
-const lastItemHistoryState = new LastItemHistoryState(40 * 1000)
-const tempStore = new TempStore(5)
+const lastItemHistoryState = new LastItemHistoryState(30 * 1000)
+const tempStore = new TempStore(10)
 
 
 // сохраняет из временного стора в хромовское,
@@ -12,6 +12,7 @@ const tempStore = new TempStore(5)
 // или принудительно (force), не смотря на заполнение
 function save(force?: boolean) {
   tempStore.getAndClear(lastState => {
+    // console.log('save', { force, lastState });
     addHistoryVisit(lastState)
   }, force)
 }
@@ -31,8 +32,12 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   }
   // принудительно сохранение временных данных
   if (msg.type === 'history_visit_tempSave') {
+    const maybeItemHistory = lastItemHistoryState.pop()
+    if (maybeItemHistory) {
+      tempStore.push(maybeItemHistory)
+    }
     save(true)
-    sendResponse('ok')
+    // sendResponse('ok')
   }
 })
 
@@ -50,12 +55,15 @@ chrome.runtime.onStartup.addListener(() => {
 // переключение активных вкладок
 chrome.tabs.onActivated.addListener(activeInfo => {
   // console.log('onActivated', {activeInfo});
-  
   chrome.tabs.get(activeInfo.tabId, tab => {
     // console.log('onActivated', {tab});
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
-    lastItemHistoryState.push({ title: tab.title, url: tab.url })
+    lastItemHistoryState.push({
+      title: tab.title,
+      url: tab.url,
+      icon: tab.favIconUrl,
+    })
   })
 })
 
@@ -66,7 +74,11 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // console.log('onUpdated', {changeInfo, tab});
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
-  lastItemHistoryState.push({ title: tab.title, url: tab.url })
+  lastItemHistoryState.push({
+    title: tab.title,
+    url: tab.url,
+    icon: tab.favIconUrl,
+  })
 })
 
 
