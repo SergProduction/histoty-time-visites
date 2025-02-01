@@ -15,7 +15,7 @@ import {
 const MAXSIZE_CHROMESTORAGE = 5242880
 
 
-export function UserStore() {
+export function UserStoreSize() {
   const bytesInUsed = useStore($bytesInUsed)
 
   const clearUserStore = () => {

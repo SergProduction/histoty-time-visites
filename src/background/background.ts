@@ -1,10 +1,10 @@
 import { addHistoryVisit } from "../share-lib/chrome"
+import { log } from "./log"
 import { LastItemHistoryState, TempStore } from "./store"
 
 
-
-const lastItemHistoryState = new LastItemHistoryState(30 * 1000)
-const tempStore = new TempStore(10)
+const lastItemHistoryState = new LastItemHistoryState(10 * 1000)
+const tempStore = new TempStore(30)
 
 
 // сохраняет из временного стора в хромовское,
@@ -12,7 +12,7 @@ const tempStore = new TempStore(10)
 // или принудительно (force), не смотря на заполнение
 function save(force?: boolean) {
   tempStore.getAndClear(lastState => {
-    // console.log('save', { force, lastState });
+    log('save', { force, lastState });
     addHistoryVisit(lastState)
   }, force)
 }
@@ -26,6 +26,8 @@ lastItemHistoryState.onCloseLastSession((lastItemHistory) => {
 
 
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  log('chrome.runtime.onMessage', msg);
+
   // если пауза, то завершаем сессию
   if (msg.type === 'history_visit_isActive' && msg.payload === false) {
     lastItemHistoryState.closeLastSession()
@@ -54,9 +56,10 @@ chrome.runtime.onStartup.addListener(() => {
 
 // переключение активных вкладок
 chrome.tabs.onActivated.addListener(activeInfo => {
-  // console.log('onActivated', {activeInfo});
+  // активируется даже при наведении на вкладку
+  // log('onActivated', { activeInfo });
   chrome.tabs.get(activeInfo.tabId, tab => {
-    // console.log('onActivated', {tab});
+    log('chrome.tabs.get', { tab });
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
     lastItemHistoryState.push({
@@ -71,7 +74,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
 // обновление вкладки
 // в том числе переход по ссылкам в рамках одной вкладки
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // console.log('onUpdated', {changeInfo, tab});
+  log('onUpdated', { changeInfo, tab });
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
   lastItemHistoryState.push({

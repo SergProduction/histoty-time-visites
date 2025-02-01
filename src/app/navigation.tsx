@@ -13,7 +13,7 @@ import {
 import { HistoryHost } from './view/host'
 import { HistoryTimeVisite } from './view/history'
 import { Chart } from './view/c3'
-import { UserStore } from './view/userStor'
+import { UserStoreSize } from './view/userStor'
 import styled from 'styled-components'
 
 
@@ -75,7 +75,7 @@ export const NavigationTop = () => {
           </Tabs>
         </NavbarGroup>
         <NavbarGroup align="right">
-          <UserStore />
+          <UserStoreSize />
         </NavbarGroup>
       </Navbar>
       <div className='body'>

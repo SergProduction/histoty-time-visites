@@ -1,5 +1,6 @@
 import { ItemHistoryVisit } from "../share-lib/types"
 import { urlParseRegExp } from "../share-lib/url-parse"
+import { log } from "./log"
 
 export type ItemHistory = { title: string, url: string, icon?: string }
 
@@ -15,7 +16,7 @@ export class TempStore {
 
   push(itemHist: ItemHistoryVisit) {
     this.state.push(itemHist)
-    // console.log('TempStore.push', this.state);
+    log('TempStore.push', this.state);
   }
 
   // получить и сбросить стор
@@ -46,7 +47,7 @@ export class LastItemHistoryState {
   }
 
   push(payload: ItemHistory) {
-    // console.log('LastItemHistoryState.push', this.state, payload);
+    log('LastItem.push', this.state, payload);
 
     if (payload.url.startsWith('chrome')) return
 
@@ -100,12 +101,15 @@ export class LastItemHistoryState {
   // если время продолжительности сессию больше указанной (sessionMinTime)
   closeLastSession() {
     if (!this.state) return
+
     const lastState = {
       ...this.state,
       end: Date.now(),
     }
+
     this.listeners.map(cb => {
-      if (lastState.end - lastState.start > this.sessionMinTime) {
+      log('LastItem.closeLastSession', lastState);
+      if ((lastState.end - lastState.start) > this.sessionMinTime) {
         cb(lastState)
       }
     })

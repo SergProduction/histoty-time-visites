@@ -1,44 +1,22 @@
 
+
+
 const urlRegExp = /^((http[s]?|ftp):\/)?\/?([^:\/\s]+)((\/\w+)*\/)([\w\-\.]+[^#?\s]+)(.*)?(#[\w\-]+)?$/
 
 export function urlParseRegExp(url: string) {
   const defaultParams = {
-    fullUrl: url,
+    href: url,
     protocol: url,
     host: url,
-    path: url,
-    file: url,
-    query: url,
-    hash: url
+    origin: url, // домент вместе с протоколом
+    pathname: url, // все что после домена
+    searchParams: url,
   }
 
   try {
-    const maybeParams = urlRegExp.exec(url)
+    const urlParams = new URL(url)
 
-    if (maybeParams === null) {
-      // console.warn('urlParseRegExp error:', url)
-      return defaultParams
-    }
-
-    const [
-      fullUrl,
-      protocol,
-      host,
-      path,
-      file,
-      query,
-      hash
-    ] = maybeParams
-
-    return {
-      fullUrl,
-      protocol,
-      host,
-      path,
-      file,
-      query,
-      hash
-    }
+    return urlParams
   } catch (err) {
     console.warn('urlParseRegExp error:', url)
     console.error(err)
