@@ -11,7 +11,9 @@ export function Days(props: { historyFull: ItemHistoryFull[] }) {
   const [daysTotalTime, setDaysTotalTime] = useState<Array<{ day: number, totalTime: number }>>([])
 
   useEffect(() => {
-    setDaysTotalTime(getDaysTotalTime(props.historyFull))
+    const daysTotalTime = getDaysTotalTime(props.historyFull)
+    const lastDaysTotalTime = daysTotalTime.slice(-7).reverse()
+    setDaysTotalTime(lastDaysTotalTime)
   }, [props.historyFull])
 
   return (

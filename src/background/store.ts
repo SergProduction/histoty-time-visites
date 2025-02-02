@@ -82,8 +82,11 @@ export class LastItemHistoryState {
     }
   }
 
-  // возвращает активную сессию и обновляет время
-  // но не удаляет как обычный pop у массивов
+
+  /**
+   * возвращает активную сессию и обновляет время
+   * но не удаляет как обычный pop у массивов  
+  */
   pop() {
     if (this.state === null) return null
     const currentSession = {
@@ -97,10 +100,19 @@ export class LastItemHistoryState {
     return currentSession
   }
 
-  // завершает сессию, и вызывает всех слушателей,
-  // если время продолжительности сессию больше указанной (sessionMinTime)
-  closeLastSession() {
+  /**
+    завершает сессию, и вызывает всех слушателей,
+    если время продолжительности сессию больше указанной (sessionMinTime).
+    Если передать url, то завершить сессию если он совпадет со стейтом
+  */
+  closeLastSession(maybeUrl?: string) {
     if (!this.state) return
+
+    if (typeof maybeUrl === 'string') {
+      const { host: hostState } = urlParseRegExp(this.state.url)
+      const { host: hostPayload } = urlParseRegExp(maybeUrl)
+      if (hostState !== hostPayload) return
+    }
 
     const lastState = {
       ...this.state,

@@ -51,7 +51,7 @@ export function Body() {
             {currentHost.icon && (
               <img src={currentHost.icon} alt="icon" className='icon' />
             )}
-            <p className='no-margin'>{currentHost.host}</p>
+            <p className='domenName'>{currentHost.host}</p>
           </div>
 
           <p className='time'>
@@ -77,21 +77,24 @@ const BodyStyle = styled.div`
   .domen {
     display: flex;
     align-items: center;
+    justify-content: space-between;
   }
 
   .icon {
     width: 16px;
     height: 16px;
     margin-right: 8px;
-    background: #ccc;
+    background: #eee;
   }
 
-  .no-margin {
+  .domenName {
     margin: 0;
+    width: 100%;
+    text-align: right;
   }
 
   .time {
     font-weight: 600;
+    margin: 6px 0;
   }
-
 `

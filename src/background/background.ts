@@ -3,7 +3,7 @@ import { log } from "./log"
 import { LastItemHistoryState, TempStore } from "./store"
 
 
-const lastItemHistoryState = new LastItemHistoryState(10 * 1000)
+const lastItemHistoryState = new LastItemHistoryState(30 * 1000)
 const tempStore = new TempStore(30)
 
 
@@ -29,8 +29,16 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   log('chrome.runtime.onMessage', msg);
 
   // если пауза, то завершаем сессию
-  if (msg.type === 'history_visit_isActive' && msg.payload === false) {
-    lastItemHistoryState.closeLastSession()
+  if (msg.type === 'history_visit_isActive') {
+    if (msg.isActive === false) {
+      lastItemHistoryState.closeLastSession(msg.historyItem.url)
+    }
+    if (msg.isActive === true &&
+      (lastItemHistoryState.state?.url === msg.historyItem.url
+        || lastItemHistoryState.state === null
+      )) {
+      lastItemHistoryState.push(msg.historyItem)
+    }
   }
   // принудительно сохранение временных данных
   if (msg.type === 'history_visit_tempSave') {
