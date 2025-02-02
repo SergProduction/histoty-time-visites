@@ -4,7 +4,7 @@ import { LastItemHistoryState, TempStore } from "./store"
 
 
 const lastItemHistoryState = new LastItemHistoryState(30 * 1000)
-const tempStore = new TempStore(30)
+const tempStore = new TempStore(7)
 
 
 // сохраняет из временного стора в хромовское,

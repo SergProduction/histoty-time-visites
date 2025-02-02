@@ -2,13 +2,6 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { useStore } from 'effector-react'
 import DT from 'date-template'
-import {
-  ProgressBar,
-  Intent,
-  Button,
-  ButtonGroup,
-  Alert
-} from '@blueprintjs/core'
 
 import { $history } from '../store/main'
 import { getDaysTotalTime, ItemHistoryDay } from '../../share-lib/getDaysTotalTime'
@@ -32,11 +25,14 @@ export function Days() {
             <p>{DT('%0D/%0M/%Y', histDay.day)}</p>
           </div>
           <div className='day-body'>
-            {histDay.hosts.map(histHost => (
+            {histDay.hosts.slice(0, 10).map(histHost => (
               <div className='host'>
                 {histHost.icon && <img src={histHost.icon} alt="icon" className='icon' />}
-                <p>{histHost.host}</p>
+                <p className='fill'>{histHost.host}</p>
                 <p>{timeFormater(histHost.totalTime)}</p>
+                {histDay.hosts.length > 10 && (
+                  <p>всего {histDay.hosts.length}</p>
+                )}
               </div>
             ))}
           </div>
@@ -53,6 +49,10 @@ const DivStyle = styled.div`
   gap: 8px;
   margin: 8px;
 
+  p {
+    margin: 0;
+  }
+
   .day-block {
     border: 1px solid #ccc;
     height: 100%;
@@ -61,6 +61,7 @@ const DivStyle = styled.div`
   .day-head {
     background-color: #ccc;
     text-align: center;
+    padding: 2px;
   }
 
   .day-body {
@@ -71,15 +72,23 @@ const DivStyle = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 2px;
+    margin-bottom: 2px;
 
     & p {
       margin: 2px 6px;
     }
   }
 
+  .fill {
+    width: 100%;
+  }
+
   .icon {
     width: 16px;
     height: 16px;
     background: #eee;
+    margin-right: 8px;
   }
 `

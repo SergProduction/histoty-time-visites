@@ -1,12 +1,12 @@
 import { ItemHistoryByHost, ItemHistoryFull } from "./types"
-import { groupBy, sum } from "./pure"
+import { groupBy, sortByProp, sum } from "./pure"
 
 
 
 export const historyMapGroupByHost = (his: ItemHistoryFull[]): ItemHistoryByHost[] => {
-  const hisMapHost = groupBy(his, 'host')
-  return Object.keys(hisMapHost).map(host => {
-    const hisHost = hisMapHost[host]
+  const histGroupHost = groupBy(his, 'host')
+  const histHost = Object.keys(histGroupHost).map(host => {
+    const hisHost = histGroupHost[host]
     const totalTime = sum(hisHost.map(h => h.totalTime))
     const firstHost = hisHost[0]
     return {
@@ -16,4 +16,6 @@ export const historyMapGroupByHost = (his: ItemHistoryFull[]): ItemHistoryByHost
       history: hisHost
     }
   })
+
+  return sortByProp('totalTime')(histHost, true)
 }

@@ -26,7 +26,7 @@ export function getDaysTotalTime(hist: ItemHistoryFull[]): ItemHistoryDay[] {
   const historyDayTotalTime = historyDaySorted.map(([day, hist]) => ({
     day: parseInt(day),
     totalTime: sum(hist.map(x => x.totalTime)),
-    hosts: sortByProp('totalTime')(historyMapGroupByHost(hist), true)
+    hosts: historyMapGroupByHost(hist),
   }));
 
   return historyDayTotalTime;
