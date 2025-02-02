@@ -64,5 +64,6 @@ const DivStyle = styled.div`
 
   .icon {
     width: 16px;
+    background: #eee;
   }
 `

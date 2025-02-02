@@ -2,9 +2,9 @@ import React, { useEffect, useState } from 'react'
 import cn from 'classnames'
 import styled from 'styled-components'
 import DT from 'date-template'
-import { groupBy, sum, timeFormater } from '../../share-lib/pure'
+import { timeFormater } from '../../share-lib/pure'
 import { ItemHistoryFull } from '../../share-lib/types'
-import { getDayId } from '../../share-lib/day-id'
+import { getDaysTotalTime } from '../../share-lib/getDaysTotalTime'
 
 
 export function Days(props: { historyFull: ItemHistoryFull[] }) {
@@ -42,22 +42,6 @@ const BodyStyle = styled.div`
     }
   }
 `
-
-function getDaysTotalTime(hist: ItemHistoryFull[]) {
-  const historyDayId = hist.map(x => ({
-    ...x,
-    dayId: getDayId(x.start)
-  }))
-  const historyDays = groupBy(historyDayId, 'dayId')
-  const historyDaySorted = Object.entries(historyDays).sort(([dayA], [dayB]) => dayA - dayB)
-
-  const historyDayTotalTime = historyDaySorted.map(([day, hist]) => ({
-    day: parseInt(day),
-    totalTime: sum(hist.map(x => x.totalTime))
-  }))
-
-  return historyDayTotalTime
-}
 
 function middlewareDayName(date: any) {
   const dayName = [

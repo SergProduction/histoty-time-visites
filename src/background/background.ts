@@ -30,8 +30,9 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   // если пауза, то завершаем сессию
   if (msg.type === 'history_visit_isActive') {
-    if (msg.isActive === false) {
+    if (msg.isActive === false && lastItemHistoryState.state?.url === msg.historyItem.url) {
       lastItemHistoryState.closeLastSession(msg.historyItem.url)
+      save(true)
     }
     if (msg.isActive === true &&
       (lastItemHistoryState.state?.url === msg.historyItem.url

@@ -13,5 +13,5 @@ chrome.storage.onChanged.addListener((changes, namespace) => {
 
   const historyVisit = storageChange.newValue as ItemHistoryVisit[]
 
-  setHistory(historyVisit)
+  setHistory(historyVisit || [])
 });

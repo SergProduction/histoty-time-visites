@@ -1,8 +1,8 @@
 import { ItemHistoryVisit } from './types'
 
-type StorageAreaMyContent = { historyVisit: ItemHistoryVisit[] } & {[k: string]: any}
+type StorageAreaMyContent = { historyVisit: ItemHistoryVisit[] } & { [k: string]: any }
 
-const isStorageAreaExistMyContent = (s: {[k: string]: any}): s is StorageAreaMyContent => {
+const isStorageAreaExistMyContent = (s: { [k: string]: any }): s is StorageAreaMyContent => {
   return Array.isArray(s.historyVisit)
 }
 

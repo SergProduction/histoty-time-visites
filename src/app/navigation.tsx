@@ -15,6 +15,7 @@ import { HistoryTimeVisite } from './view/history'
 import { Chart } from './view/c3'
 import { UserStoreSize } from './view/userStor'
 import styled from 'styled-components'
+import { Days } from './view/days'
 
 
 // TODO: добавить избранное
@@ -33,6 +34,12 @@ const config = [
     component: HistoryHost,
   },
   {
+    title: 'Days',
+    path: 'days',
+    component: Days,
+  },
+  /* 
+  {
     title: 'Chart',
     path: 'chart',
     component: Chart,
@@ -44,6 +51,7 @@ const config = [
       <p>статистика, соклько всего времени, сколько вкладок посетил, за какое время</p>
     ),
   },
+ */
 ]
 
 
