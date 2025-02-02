@@ -9,10 +9,15 @@ export type ItemHistoryVisit = {
 }
 
 
+export type ItemHistoryFull = ItemHistoryVisit & {
+  host: string
+  totalTime: number
+}
+
+
 export type ItemHistoryByHost = {
   host: string
   icon?: string,
   totalTime: number
+  history: Array<ItemHistoryFull>
 }
-
-export type ItemHistoryFull = ItemHistoryVisit & ItemHistoryByHost

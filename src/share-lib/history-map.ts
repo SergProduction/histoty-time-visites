@@ -13,6 +13,7 @@ export const historyMapGroupByHost = (his: ItemHistoryFull[]): ItemHistoryByHost
       host,
       icon: firstHost.icon,
       totalTime: totalTime,
+      history: hisHost
     }
   })
 }
