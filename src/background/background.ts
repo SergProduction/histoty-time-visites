@@ -3,7 +3,7 @@ import { log } from "./log"
 import { LastItemHistoryState, TempStore } from "./store"
 
 
-const lastItemHistoryState = new LastItemHistoryState(30 * 1000)
+const lastItemHistoryState = new LastItemHistoryState(15 * 1000)
 const tempStore = new TempStore(7)
 
 

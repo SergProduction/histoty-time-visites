@@ -13,6 +13,7 @@ import { timeFormater } from '../../share-lib/pure'
 
 import { $historyHost, toggleSortByTotalTime } from '../store/host'
 import { toggleSortByUrl } from '../store/main'
+import { Image } from '../components/icon'
 
 
 
@@ -46,7 +47,7 @@ export function HistoryHost() {
             {maybeHistoryHost.map((h, i) => (
               <tr key={i + h.host}>
                 <td>
-                  {h.icon && <img src={h.icon} alt="icon" className='icon' />}
+                  <Image href={h.icon} />
                 </td>
                 <td>{h.host}</td>
                 <td>{timeFormater(h.totalTime)}</td>
@@ -61,9 +62,4 @@ export function HistoryHost() {
 
 const DivStyle = styled.div`
   white-space: nowrap;
-
-  .icon {
-    width: 16px;
-    background: #eee;
-  }
 `

@@ -23,6 +23,7 @@ import {
   filterByVisitRangeDate,
   cancelAllFilters
 } from '../store/main'
+import { Image } from '../components/icon'
 
 
 export function HistoryTimeVisite() {
@@ -95,9 +96,7 @@ export function HistoryTimeVisite() {
           <React.Fragment>
             {history.map((h, i) => (
               <tr key={i + h.url}>
-                <td>
-                  {h.icon && <img src={h.icon} alt="icon" className='icon' />}
-                </td>
+                <td><Image href={h.icon} /></td>
                 <td>{DT('%0D/%0M/%Y %0h:%0m:%0s', h.start)}</td>
                 <td>{timeFormater((h.end || 0) - h.start)}</td>
                 <td>{h.title}</td>
@@ -116,10 +115,5 @@ const DivStyle = styled.div`
 
   .paginationWrap {
     padding: 10px;
-  }
-
-  .icon {
-    width: 16px;
-    background: #eee;
   }
 `

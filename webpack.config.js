@@ -57,6 +57,13 @@ module.exports = (cliParams, webpackParams) => ({
         },
       },
       {
+        test: /\.(svg)$/i,
+        loader: 'file-loader',
+        options: {
+          name: 'assets/[name].[ext]',
+        },
+      },
+      {
         test: /\.(eot|ttf|woff)$/i,
         loader: 'file-loader',
         options: {

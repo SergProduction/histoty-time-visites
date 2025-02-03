@@ -6,6 +6,7 @@ import DT from 'date-template'
 import { $history } from '../store/main'
 import { getDaysTotalTime, ItemHistoryDay } from '../../share-lib/getDaysTotalTime'
 import { timeFormater } from '../../share-lib/pure'
+import { Image } from '../components/icon'
 
 
 export function Days() {
@@ -27,14 +28,16 @@ export function Days() {
           <div className='day-body'>
             {histDay.hosts.slice(0, 10).map(histHost => (
               <div className='host'>
-                {histHost.icon && <img src={histHost.icon} alt="icon" className='icon' />}
+                <Image href={histHost.icon} />
                 <p className='fill'>{histHost.host}</p>
                 <p>{timeFormater(histHost.totalTime)}</p>
-                {histDay.hosts.length > 10 && (
-                  <p>всего {histDay.hosts.length}</p>
-                )}
               </div>
             ))}
+            {histDay.hosts.length > 10 && (
+              <div className='host'>
+                <p className='fill cursive'>всего {histDay.hosts.length}</p>
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -79,10 +82,19 @@ const DivStyle = styled.div`
     & p {
       margin: 2px 6px;
     }
+
+    &:last-child {
+      border: none;
+    }
   }
 
   .fill {
     width: 100%;
+  }
+
+  .cursive {
+    text-align: center;
+    font-style: italic;
   }
 
   .icon {
