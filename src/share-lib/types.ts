@@ -5,7 +5,7 @@ export type ItemHistoryVisit = {
   url: string,
   icon?: string,
   start: number,
-  end: null | number
+  end: number
 }
 
 

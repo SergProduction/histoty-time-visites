@@ -21,13 +21,13 @@ export function Days() {
   return (
     <DivStyle>
       {historyDays.map(histDay => (
-        <div className='day-block'>
+        <div className='day-block' key={histDay.day}>
           <div className='day-head'>
             <p>{DT('%0D/%0M/%Y', histDay.day)}</p>
           </div>
           <div className='day-body'>
             {histDay.hosts.slice(0, 10).map(histHost => (
-              <div className='host'>
+              <div className='host' key={histHost.host}>
                 <Image href={histHost.icon} />
                 <p className='fill'>{histHost.host}</p>
                 <p>{timeFormater(histHost.totalTime)}</p>

@@ -1,27 +1,32 @@
 import { addHistoryVisit } from "../share-lib/chrome"
 import { log } from "./log"
-import { LastItemHistoryState, TempStore } from "./store"
+// import { LastItemHistoryState, TempStore } from "./store/last-time"
+import { TimeTrack } from "./store/time-track"
+import { TempStore } from "./store/temp"
 
 
-const lastItemHistoryState = new LastItemHistoryState(15 * 1000)
-const tempStore = new TempStore(7)
+const timeTrack = new TimeTrack()
+const tempStore = new TempStore({ maxCount: 12, minTotalTime: 5000 })
 
 
 // сохраняет из временного стора в хромовское,
 // если переполненно временное
 // или принудительно (force), не смотря на заполнение
-function save(force?: boolean) {
-  tempStore.getAndClear(lastState => {
-    log('save', { force, lastState });
-    addHistoryVisit(lastState)
-  }, force)
+function saveForce() {
+  const lastState = tempStore.getAndClear()
+  log('saveForce', lastState);
+  addHistoryVisit(lastState)
 }
 
 
 // слушаем последнюю активную владку и сохраняем
-lastItemHistoryState.onCloseLastSession((lastItemHistory) => {
+timeTrack.onCloseLastSession((lastItemHistory) => {
   tempStore.push(lastItemHistory)
-  save()
+})
+
+tempStore.onSave((history) => {
+  log('save', history);
+  addHistoryVisit(history)
 })
 
 
@@ -30,24 +35,24 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 
   // если пауза, то завершаем сессию
   if (msg.type === 'history_visit_isActive') {
-    if (msg.isActive === false && lastItemHistoryState.state?.url === msg.historyItem.url) {
-      lastItemHistoryState.closeLastSession(msg.historyItem.url)
-      save(true)
+    if (msg.isActive === false && timeTrack.state?.url === msg.historyItem.url) {
+      timeTrack.closeLastSession(msg.historyItem.url)
+      saveForce()
     }
-    if (msg.isActive === true &&
-      (lastItemHistoryState.state?.url === msg.historyItem.url
-        || lastItemHistoryState.state === null
-      )) {
-      lastItemHistoryState.push(msg.historyItem)
+    if (
+      msg.isActive === true &&
+      (timeTrack.state?.url === msg.historyItem.url || timeTrack.state === null)
+    ) {
+      timeTrack.push(msg.historyItem)
     }
   }
   // принудительно сохранение временных данных
   if (msg.type === 'history_visit_tempSave') {
-    const maybeItemHistory = lastItemHistoryState.pop()
+    const maybeItemHistory = timeTrack.pop()
     if (maybeItemHistory) {
       tempStore.push(maybeItemHistory)
     }
-    save(true)
+    saveForce()
     // sendResponse('ok')
   }
 })
@@ -71,7 +76,7 @@ chrome.tabs.onActivated.addListener(activeInfo => {
     log('chrome.tabs.get', { tab });
     if (tab.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
-    lastItemHistoryState.push({
+    timeTrack.push({
       title: tab.title,
       url: tab.url,
       icon: tab.favIconUrl,
@@ -86,7 +91,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   log('onUpdated', { changeInfo, tab });
   if (changeInfo.status !== "complete" || !tab.active || !tab.title || !tab.url) return
 
-  lastItemHistoryState.push({
+  timeTrack.push({
     title: tab.title,
     url: tab.url,
     icon: tab.favIconUrl,
@@ -96,6 +101,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
 // close window
 chrome.windows.onRemoved.addListener(windowId => {
-  lastItemHistoryState.closeLastSession()
-  save(true)
+  timeTrack.closeLastSession()
+  saveForce()
 })

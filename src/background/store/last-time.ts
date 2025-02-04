@@ -1,6 +1,6 @@
-import { ItemHistoryVisit } from "../share-lib/types"
-import { urlParseRegExp } from "../share-lib/url-parse"
-import { log } from "./log"
+import { ItemHistoryVisit } from "../../share-lib/types"
+import { urlParseRegExp } from "../../share-lib/url-parse"
+import { log } from "../log"
 
 export type ItemHistory = { title: string, url: string, icon?: string }
 

@@ -16,6 +16,7 @@ import { Chart } from './view/c3'
 import { UserStoreSize } from './view/userStor'
 import styled from 'styled-components'
 import { Days } from './view/days'
+import { Settings } from './view/settings'
 
 
 // TODO: добавить избранное
@@ -39,6 +40,11 @@ const config = [
     component: Days,
   },
   /* 
+  {
+    title: 'Settings',
+    path: 'settings',
+    component: Settings,
+  },
   {
     title: 'Chart',
     path: 'chart',
